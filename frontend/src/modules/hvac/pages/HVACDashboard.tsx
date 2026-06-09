@@ -1,17 +1,16 @@
 import { useState } from "react";
 
-import AHUForm from "./components/AHUForm";
-import AHUResults from "./components/AHUResults";
+import AHUForm from "../components/AHUForm";
+import AHUResults from "../components/AHUResults";
+
 import type {
   AHUInput,
   AHUResult,
-} from "./AHUTypes";
-
+} from "../AHUTypes";
 
 import {
   calculateAHU,
-} from "./AHUEngine";
-
+} from "../AHUEngine";
 const HVACDashboard = () => {
 
   const [input, setInput] =
