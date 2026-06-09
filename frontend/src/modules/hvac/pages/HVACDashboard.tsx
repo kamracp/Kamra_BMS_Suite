@@ -13,7 +13,7 @@ import type {
 import {
   calculateAHU,
 } from "../AHUEngine";
-
+import HVACCommercialCard from "../components/HVACCommercialCard";
 const HVACDashboard = () => {
   const [input, setInput] =
     useState<AHUInput>({
@@ -143,7 +143,52 @@ const HVACDashboard = () => {
         </div>
 
       </div>
+      {/* HVAC COMMERCIAL INTELLIGENCE */}
 
+      <div className="bg-slate-900 rounded-xl p-6 border border-slate-700">
+        <h2 className="text-2xl font-bold mb-4 text-cyan-400">
+          HVAC Commercial Intelligence
+        </h2>
+
+        <p className="text-slate-400 mb-6">
+          Design to Takeoff, BOQ, Estimation, Tender and BIM readiness.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <HVACCommercialCard
+            title="Duct Takeoff"
+            value={245}
+            unit="m²"
+            status="Quantity Ready"
+          />
+
+          <HVACCommercialCard
+            title="BOQ Items"
+            value={18}
+            unit="Items"
+            status="BOQ Generated"
+          />
+
+          <HVACCommercialCard
+            title="Estimated Value"
+            value="₹18.5"
+            unit="Lakh"
+            status="Cost Ready"
+          />
+
+          <HVACCommercialCard
+            title="Tender Package"
+            value="READY"
+            status="Commercial Ready"
+          />
+
+          <HVACCommercialCard
+            title="BIM Integration"
+            value="PLANNED"
+            status="IFC / Revit Future"
+          />
+        </div>
+      </div>
     </div>
   );
 };
