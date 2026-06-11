@@ -14,6 +14,20 @@ import {
   calculateAHU,
 } from "../AHUEngine";
 import HVACCommercialCard from "../components/HVACCommercialCard";
+import HVACAnalyticsPanel from "../components/HVACAnalyticsPanel";
+import { HVACHealthScoreEngine } from "../../../core/hvac/calculations/analytics/HVACHealthScoreEngine";
+
+import { EnergyAnalyticsEngine } from "../../../core/hvac/calculations/analytics/EnergyAnalyticsEngine";
+
+import { WaterAnalyticsEngine } from "../../../core/hvac/calculations/analytics/WaterAnalyticsEngine";
+
+import { CarbonAnalyticsEngine } from "../../../core/hvac/calculations/analytics/CarbonAnalyticsEngine";
+
+import { FaultDetectionEngine } from "../../../core/hvac/calculations/analytics/FaultDetectionEngine";
+
+import { PredictiveMaintenanceEngine } from "../../../core/hvac/calculations/analytics/PredictiveMaintenanceEngine";
+import HVACTrendPanel
+from "../components/HVACTrendPanel";
 const HVACDashboard = () => {
   const [input, setInput] =
     useState<AHUInput>({
@@ -27,7 +41,68 @@ const HVACDashboard = () => {
 
   const [result, setResult] =
     useState<AHUResult | null>(null);
+const healthResult =
+  HVACHealthScoreEngine.calculate({
+    chillerEfficiency: 92,
+    pumpEfficiency: 85,
+    fanEfficiency: 88,
+    coolingTowerPerformance: 90,
+    heatPumpCOP: 4.2,
+  });
 
+const energyResult =
+  EnergyAnalyticsEngine.calculate({
+    coolingLoadTR: 300,
+    cop: 5.5,
+    operatingHoursPerDay: 20,
+    electricityTariff: 8,
+    daysPerYear: 330,
+  });
+
+const waterResult =
+  WaterAnalyticsEngine.calculate({
+    makeupWaterM3Hr: 3.5,
+    operatingHoursPerDay: 20,
+    waterTariff: 60,
+    daysPerYear: 330,
+  });
+
+const carbonResult =
+  CarbonAnalyticsEngine.calculate({
+    annualElectricityKWh:
+      energyResult.annualEnergyKWh,
+  });
+
+const faultResult =
+  FaultDetectionEngine.calculate({
+    chillerCOP: 5.5,
+    pumpEfficiency: 85,
+    fanEfficiency: 88,
+    coolingTowerApproachC: 4,
+    heatPumpCOP: 4.2,
+  });
+
+const maintenanceResult =
+  PredictiveMaintenanceEngine.calculate({
+    equipmentType: "Chiller",
+    runtimeHours: 25000,
+    designLifeHours: 60000,
+    faultCount: faultResult.faultCount,
+    healthScore:
+      healthResult.healthScore,
+  });
+ const healthTrend =
+  [95, 94, 93, 92, 94];
+
+const energyTrend =
+  [1250, 1220, 1180, 1160, 1140];
+
+const waterTrend =
+  [85, 84, 82, 81, 80];
+
+const carbonTrend =
+  [100, 98, 96, 95, 94];
+ 
   return (
     <div className="p-6 space-y-8">
 
@@ -81,7 +156,27 @@ const HVACDashboard = () => {
           value={1250}
           unit="kWh"
         />
+<HVACKPICard
+  title="Water Consumption"
+  value={18500}
+  unit="m³/yr"
+/>
 
+<HVACKPICard
+  title="Carbon Emissions"
+  value={1020}
+  unit="tCO₂"
+/>
+
+<HVACKPICard
+  title="Fault Count"
+  value={3}
+/>
+
+<HVACKPICard
+  title="Maintenance Risk"
+  value="LOW"
+/>
       </div>
 
       {/* EQUIPMENT SECTION */}
@@ -111,9 +206,34 @@ const HVACDashboard = () => {
           status="WARNING"
           healthScore={82}
         />
+<HVACAnalyticsPanel
+  healthScore={
+    healthResult.healthScore
+  }
+  energyScore={
+    energyResult.energyScore
+  }
+  waterScore={
+    waterResult.waterEfficiencyScore
+  }
+  carbonScore={
+    carbonResult.carbonScore
+  }
+  faultCount={
+    faultResult.faultCount
+  }
+  maintenanceRisk={
+    maintenanceResult.maintenanceRisk
+  }
+/>
 
       </div>
-
+<HVACTrendPanel
+  healthTrend={healthTrend}
+  energyTrend={energyTrend}
+  waterTrend={waterTrend}
+  carbonTrend={carbonTrend}
+/>
       {/* AHU ENGINEERING */}
 
       <div className="bg-slate-900 rounded-xl p-6 border border-slate-700">

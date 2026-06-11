@@ -23,3 +23,22 @@ export interface HVACDashboardData {
 
   energyConsumption: number;
 }
+// =====================================================
+// FAN SELECTION
+// =====================================================
+
+export interface FanSelectionInput {
+  airflowCMS: number;
+
+  totalStaticPressurePa: number;
+
+  fanEfficiency: number;
+}
+
+export interface FanSelectionResult {
+  fanPowerKW: number;
+
+  selectedMotorKW: number;
+
+  motorUtilizationPercent: number;
+}
